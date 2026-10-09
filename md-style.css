@@ -1,0 +1,431 @@
+/* ==========================================================================
+   Eucalculia v7.2.0-md — community progression build
+   Built on Eucalculia by Alberto Flaño Lombardo, with his permission.
+   Ideas & changes: mighty_elf and .da.rk. (Discord).
+   ========================================================================== */
+
+/* ---------- 1. MEM cue: v6.8.88-style amber capsule, back inside the frame -- */
+#game-container #hud #memoryCue.md-cue,
+#game-container #hud #memoryCue.md-cue[data-level="1"],
+#game-container #hud #memoryCue.md-cue[data-level="2"],
+#game-container #hud #memoryCue.md-cue[data-level="3"] {
+  --memory-cue-glow:rgba(255,193,7,0.62);
+  --memory-cue-ring:rgba(255,193,7,0.58);
+  --memory-cue-pop-border:rgba(255,213,92,0.85);
+  --memory-cue-x:0px;
+  position:absolute !important;
+  top:46px !important;
+  right:12px !important;
+  left:auto !important;
+  bottom:auto !important;
+  inset:46px 12px auto auto !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  width:max-content !important;
+  min-width:0 !important;
+  max-width:min(72%, 400px) !important;
+  height:auto !important;
+  min-height:0 !important;
+  margin:0 !important;
+  padding:8px 14px !important;
+  border-radius:999px !important;
+  border:2px solid rgba(255,193,7,0.62) !important;
+  color:#fff2bf !important;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255,213,92,0.34), transparent 52%),
+    rgba(34,26,6,0.92) !important;
+  box-shadow:
+    0 10px 28px rgba(0,0,0,0.38),
+    0 0 22px rgba(255,193,7,0.42),
+    0 0 18px rgba(255,193,7,0.18) inset !important;
+  font-family:var(--euca-font-ui, inherit) !important;
+  font-size:clamp(0.86rem, 2.1vh, 1.02rem) !important;
+  font-weight:950 !important;
+  letter-spacing:0.07em !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+  opacity:0 !important;
+  transform:translateY(-4px) !important;
+  transition:opacity 150ms ease, transform 170ms ease !important;
+  pointer-events:none !important;
+  z-index:24 !important;
+  filter:none !important;
+  contain:none !important;
+  overflow:visible !important;
+  -webkit-backdrop-filter:blur(5px) !important;
+  backdrop-filter:blur(5px) !important;
+  text-shadow:0 0 10px rgba(255,193,7,0.35) !important;
+}
+#game-container #hud #memoryCue.md-cue.visible {
+  opacity:1 !important;
+  transform:translateY(0) !important;
+}
+#game-container #hud #memoryCue.md-cue .memory-icon {
+  font-size:1.25em !important;
+  opacity:1 !important;
+  filter:saturate(1.1) drop-shadow(0 0 6px rgba(255,193,7,0.55)) !important;
+  transform:none !important;
+  animation:none !important;
+}
+#game-container #hud #memoryCue.md-cue .memory-text {
+  display:inline-block !important;
+  font-size:inherit !important;
+  color:inherit !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  vertical-align:middle;
+  animation:none !important;
+  transform:none !important;
+  text-shadow:inherit !important;
+}
+#game-container #hud #memoryCue.md-cue .memory-text::after { content:none !important; display:none !important; }
+#game-container #hud #memoryCue.md-cue::before { content:none !important; }
+#game-container #hud #memoryCue.md-cue[data-level="2"] {
+  --memory-cue-glow:rgba(255,140,60,0.62);
+  --memory-cue-ring:rgba(255,140,60,0.58);
+  --memory-cue-pop-border:rgba(255,170,110,0.85);
+  color:#ffe1cf !important;
+  border-color:rgba(255,140,60,0.62) !important;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255,170,110,0.34), transparent 52%),
+    rgba(40,18,6,0.92) !important;
+  box-shadow:0 10px 28px rgba(0,0,0,0.38), 0 0 22px rgba(255,140,60,0.42), 0 0 18px rgba(255,140,60,0.18) inset !important;
+}
+#game-container #hud #memoryCue.md-cue[data-level="3"] {
+  --memory-cue-glow:rgba(255,105,80,0.62);
+  --memory-cue-ring:rgba(255,105,80,0.58);
+  --memory-cue-pop-border:rgba(255,150,130,0.85);
+  color:#ffdcd6 !important;
+  border-color:rgba(255,105,80,0.62) !important;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255,150,130,0.34), transparent 52%),
+    rgba(44,12,10,0.92) !important;
+  box-shadow:0 10px 28px rgba(0,0,0,0.38), 0 0 22px rgba(255,105,80,0.42), 0 0 18px rgba(255,105,80,0.18) inset !important;
+}
+/* holding state: a question is scheduled, the interposed trials are unmarked */
+#game-container #hud #memoryCue.md-cue.md-hold {
+  opacity:0.78 !important;
+  border-style:dashed !important;
+  font-weight:800 !important;
+}
+/* pop + ring (v6.8.88 gesture, restored) */
+#game-container #hud #memoryCue.md-cue.memory-pop {
+  animation:mdMemoryCuePop 960ms cubic-bezier(.18,.89,.32,1.18) !important;
+  border-color:var(--memory-cue-pop-border) !important;
+}
+#game-container #hud #memoryCue.md-cue.memory-pop::after {
+  content:"" !important;
+  display:block !important;
+  position:absolute;
+  inset:-10px;
+  border-radius:999px;
+  border:3px solid var(--memory-cue-ring);
+  box-shadow:0 0 28px var(--memory-cue-glow);
+  pointer-events:none;
+  opacity:0;
+  animation:mdMemoryCueRing 960ms ease-out;
+}
+@keyframes mdMemoryCuePop {
+  0%   { opacity:0.2; transform:translateY(-6px) scale(0.86); filter:brightness(1); }
+  18%  { opacity:1;   transform:translateY(0) scale(1.14); filter:brightness(1.35); }
+  42%  { opacity:1;   transform:translateY(0) scale(1.02); filter:brightness(1.10); }
+  68%  { opacity:1;   transform:translateY(0) scale(1.07); filter:brightness(1.22); }
+  100% { opacity:1;   transform:translateY(0) scale(1);    filter:brightness(1); }
+}
+@keyframes mdMemoryCueRing {
+  0%   { opacity:0;    transform:scale(0.66); }
+  18%  { opacity:0.95; transform:scale(0.92); }
+  55%  { opacity:0.45; transform:scale(1.18); }
+  100% { opacity:0;    transform:scale(1.46); }
+}
+/* the whole frame glows amber while a MEM item is on screen */
+#game-container.md-mem-active {
+  box-shadow:0 0 0 2px rgba(255,193,7,0.55), 0 0 34px rgba(255,193,7,0.28), 0 0 0 1px rgba(255,193,7,0.25) inset !important;
+  transition:box-shadow 180ms ease;
+}
+#game-container.md-mem-active[data-md-mem-level="2"] {
+  box-shadow:0 0 0 2px rgba(255,140,60,0.55), 0 0 34px rgba(255,140,60,0.28), 0 0 0 1px rgba(255,140,60,0.25) inset !important;
+}
+#game-container.md-mem-active[data-md-mem-level="3"] {
+  box-shadow:0 0 0 2px rgba(255,105,80,0.55), 0 0 34px rgba(255,105,80,0.28), 0 0 0 1px rgba(255,105,80,0.25) inset !important;
+}
+#promptRow.memory-cue-in-prompt { grid-template-columns:minmax(0,1fr) auto !important; }
+@media (max-width:560px), (max-height:650px) {
+  #game-container #hud #memoryCue.md-cue,
+  #game-container #hud #memoryCue.md-cue[data-level="2"],
+  #game-container #hud #memoryCue.md-cue[data-level="3"] {
+    top:44px !important;
+    right:auto !important;
+    left:12px !important;
+    inset:44px auto auto 12px !important;
+    max-width:min(80%, 340px) !important;
+    padding:7px 12px !important;
+    font-size:0.82rem !important;
+  }
+  #mdMemBanner { padding:14px 16px; max-width:94%; }
+  #mdMemBanner .md-banner-title { white-space:normal; font-size:clamp(0.98rem, 5.2vw, 1.3rem); line-height:1.15; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #game-container #hud #memoryCue.md-cue.memory-pop { animation:none !important; }
+  #game-container #hud #memoryCue.md-cue.memory-pop::after { display:none !important; }
+}
+
+/* ---------- 2. MEM banner: shown during the (extended) PREP of a MEM trial ---- */
+#mdMemBanner {
+  position:absolute;
+  left:50%; top:50%;
+  transform:translate(-50%,-50%) scale(0.92);
+  z-index:26;
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  padding:16px 26px;
+  border-radius:20px;
+  border:2px solid rgba(255,213,92,0.85);
+  background:
+    radial-gradient(circle at 30% 0%, rgba(255,213,92,0.30), transparent 60%),
+    rgba(30,22,4,0.96);
+  box-shadow:0 18px 48px rgba(0,0,0,0.5), 0 0 40px rgba(255,193,7,0.45);
+  color:#fff2bf;
+  font-family:var(--euca-font-ui, inherit);
+  text-align:center;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 140ms ease, transform 180ms cubic-bezier(.18,.89,.32,1.18);
+  max-width:min(94%, 560px);
+}
+#mdMemBanner .md-banner-title { white-space:normal; max-width:100%; }
+@media (min-width:561px) { #mdMemBanner .md-banner-title { white-space:nowrap; } }
+#mdMemBanner.visible { opacity:1; transform:translate(-50%,-50%) scale(1); }
+#mdMemBanner .md-banner-title { font-size:clamp(1.05rem,3.2vh,1.5rem); font-weight:950; letter-spacing:0.08em; }
+#mdMemBanner .md-banner-sub { font-size:clamp(0.78rem,2.1vh,0.95rem); font-weight:800; letter-spacing:0.06em; color:#ffd86a; }
+#mdMemBanner .md-banner-scope { font-size:clamp(0.72rem,1.9vh,0.86rem); font-weight:700; color:#fff; opacity:0.9; }
+#mdMemBanner[data-level="2"] { border-color:rgba(255,170,110,0.85); color:#ffe1cf; box-shadow:0 18px 48px rgba(0,0,0,0.5), 0 0 40px rgba(255,140,60,0.45); }
+#mdMemBanner[data-level="2"] .md-banner-sub { color:#ffb27a; }
+#mdMemBanner[data-level="3"] { border-color:rgba(255,150,130,0.85); color:#ffdcd6; box-shadow:0 18px 48px rgba(0,0,0,0.5), 0 0 40px rgba(255,105,80,0.45); }
+#mdMemBanner[data-level="3"] .md-banner-sub { color:#ff9a86; }
+
+/* ---------- 3. Retained-values hint inside the META¹ question ------------------ */
+#metaQuestion .md-scope-hint {
+  display:none;
+  margin:14px auto 0;
+  padding:6px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,193,7,0.45);
+  background:rgba(255,193,7,0.10);
+  color:#ffe6a3;
+  font-size:clamp(0.68rem,1.8vh,0.82rem);
+  font-weight:800;
+  letter-spacing:0.05em;
+  width:max-content;
+  max-width:96%;
+  white-space:normal;
+}
+#metaQuestion .md-scope-hint.visible { display:block; }
+#metaQuestion .md-scope-hint b { color:#fff; font-weight:950; }
+
+/* ---------- 3b. Peek row (v1.5) ------------------------------------------------- */
+#metaQuestion .md-peek {
+  display:none; margin:10px auto 0; max-width:96%; width:max-content;
+  align-items:center; justify-content:center; flex-wrap:wrap; gap:5px;
+  font-size:clamp(0.58rem,1.5vh,0.7rem); font-weight:800; letter-spacing:0.03em; color:#b9b4d6;
+}
+#metaQuestion .md-peek.visible { display:flex; }
+#metaQuestion .md-peek .md-peek-label { color:#dcd9ff; font-weight:950; letter-spacing:0.08em; text-transform:uppercase; font-size:0.9em; margin-right:2px; }
+#metaQuestion .md-peek .md-peek-btn {
+  cursor:pointer; font:inherit; font-weight:800; color:#e8e8f0; min-height:28px; padding:3px 9px; border-radius:999px;
+  border:1px solid rgba(140,125,255,0.45); background:rgba(140,125,255,0.10); pointer-events:auto; touch-action:manipulation;
+}
+#metaQuestion .md-peek .md-peek-btn:hover { background:rgba(140,125,255,0.25); border-color:rgba(140,125,255,0.8); }
+#metaQuestion .md-peek .md-peek-btn.revealed { border-color:rgba(255,193,7,0.75); background:rgba(255,193,7,0.14); color:#fff; cursor:default; }
+#metaQuestion .md-peek .md-peek-btn.revealed b { color:#ffd86a; font-weight:950; }
+#metaQuestion .md-peek .md-peek-cost { flex-basis:100%; text-align:center; color:#8b88a3; font-weight:700; font-size:0.9em; margin-top:1px; }
+#metaQuestion .md-peek.peeked .md-peek-cost { color:#ffd86a; }
+#game-container.md-peeked #memoryCue { opacity:0.85; }
+@media (max-width:560px) {
+  #metaQuestion .md-peek { gap:4px; }
+  #metaQuestion .md-peek .md-peek-btn { min-height:26px; padding:2px 7px; }
+}
+
+/* ---------- 4. Settings: Progression section ---------------------------------- */
+#mdProgressionSection {
+  margin:10px 0 14px;
+  padding:12px 12px 10px;
+  border-radius:14px;
+  border:1px solid rgba(255,193,7,0.30);
+  background:linear-gradient(180deg, rgba(255,193,7,0.07), rgba(255,255,255,0.025));
+}
+#mdProgressionSection .md-sec-title {
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  font-size:0.72rem; font-weight:900; letter-spacing:0.12em; text-transform:uppercase;
+  color:#ffd86a; margin-bottom:8px;
+}
+#mdProgressionSection .md-sec-title .md-new { font-size:0.58rem; padding:2px 7px; border-radius:999px; background:rgba(255,193,7,0.18); border:1px solid rgba(255,193,7,0.4); color:#ffe6a3; letter-spacing:0.08em; }
+#mdProgressionSection .md-modes { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; }
+@media (max-width:560px) { #mdProgressionSection .md-modes { grid-template-columns:1fr; } }
+#mdProgressionSection .md-mode {
+  cursor:pointer; text-align:left;
+  padding:10px 11px; border-radius:12px;
+  border:1px solid rgba(255,255,255,0.10);
+  background:rgba(255,255,255,0.035);
+  color:var(--euca-text, #e8e8f0);
+  font-family:inherit; font-size:0.72rem; line-height:1.35;
+  transition:border-color 140ms ease, background 140ms ease, box-shadow 140ms ease;
+}
+#mdProgressionSection .md-mode:hover { border-color:rgba(255,193,7,0.45); }
+#mdProgressionSection .md-mode[aria-checked="true"] {
+  border-color:rgba(255,193,7,0.75);
+  background:rgba(255,193,7,0.10);
+  box-shadow:0 0 0 1px rgba(255,193,7,0.35) inset, 0 0 18px rgba(255,193,7,0.14);
+}
+#mdProgressionSection .md-mode .md-mode-name { display:block; font-weight:950; font-size:0.82rem; letter-spacing:0.04em; color:#fff; margin-bottom:3px; }
+#mdProgressionSection .md-mode .md-mode-sub { display:block; color:#cfcbe0; }
+#mdProgressionSection .md-mode .md-mode-tag { display:inline-block; margin-top:6px; font-size:0.58rem; letter-spacing:0.08em; text-transform:uppercase; color:#ffd86a; opacity:0.9; }
+#mdProgressionSection .md-desc { margin:10px 2px 8px; font-size:0.7rem; line-height:1.45; color:#cfcbe0; }
+#mdProgressionSection .md-status { margin:6px 2px 8px; font-size:0.7rem; line-height:1.45; color:#ffe6a3; font-variant-numeric:tabular-nums; }
+#mdProgressionSection .md-toggles { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+#mdProgressionSection .md-toggle {
+  cursor:pointer; font-family:inherit; font-size:0.66rem; font-weight:800; letter-spacing:0.04em;
+  padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.04); color:#cfcbe0;
+}
+#mdProgressionSection .md-toggle[aria-pressed="true"] { border-color:rgba(0,214,143,0.55); background:rgba(0,214,143,0.10); color:#eafff6; }
+#mdProgressionSection .md-toggle[disabled] { opacity:0.45; cursor:not-allowed; }
+#mdProgressionSection .md-about-row { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+#mdProgressionSection .md-link-btn {
+  cursor:pointer; font-family:inherit; font-size:0.66rem; font-weight:800; letter-spacing:0.05em;
+  padding:6px 10px; border-radius:10px; border:1px solid rgba(255,193,7,0.35);
+  background:rgba(255,193,7,0.08); color:#ffe6a3;
+}
+
+/* ---------- 5. Footer credit --------------------------------------------------- */
+#overlay .overlay-footer .md-credit {
+  margin:6px 0 0; font-size:0.62rem; line-height:1.45; color:#a8a4bd; text-align:right;
+}
+#overlay .overlay-footer .md-credit strong { color:#e8e8f0; }
+#overlay .overlay-footer .md-credit .md-credit-build { color:#ffd86a; font-weight:900; letter-spacing:0.05em; }
+#overlay .overlay-footer .md-credit button {
+  cursor:pointer; font:inherit; font-weight:800; color:#ffe6a3; background:none; border:none; padding:0; text-decoration:underline dotted; letter-spacing:0.03em;
+}
+
+/* ---------- 6. About modal ----------------------------------------------------- */
+#mdAboutModal {
+  position:fixed; inset:0; z-index:2147483000;
+  display:none; align-items:center; justify-content:center;
+  background:rgba(5,5,8,0.86);
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  padding:16px;
+}
+#mdAboutModal.visible { display:flex; }
+#mdAboutCard {
+  width:min(720px, 100%); max-height:min(88vh, 900px); overflow:auto;
+  border-radius:20px; border:1px solid rgba(255,193,7,0.35);
+  background:linear-gradient(180deg, #17130a, #0d0b12 40%);
+  box-shadow:0 30px 80px rgba(0,0,0,0.6), 0 0 40px rgba(255,193,7,0.12);
+  color:#e8e8f0; font-family:var(--euca-font-ui, inherit);
+  padding:22px 22px 18px;
+}
+#mdAboutCard h2 { margin:0 0 4px; font-size:1.1rem; letter-spacing:0.06em; color:#fff; }
+#mdAboutCard .md-eyebrow { font-size:0.62rem; letter-spacing:0.14em; text-transform:uppercase; color:#ffd86a; font-weight:900; }
+#mdAboutCard p, #mdAboutCard li { font-size:0.78rem; line-height:1.5; color:#d6d3e6; }
+#mdAboutCard h3 { margin:16px 0 6px; font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase; color:#ffd86a; }
+#mdAboutCard ul { padding-left:18px; margin:4px 0; }
+#mdAboutCard .md-close {
+  float:right; cursor:pointer; font:inherit; font-weight:900; color:#fff;
+  background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.14); border-radius:10px; padding:6px 12px;
+}
+#mdAboutCard code { font-size:0.72rem; color:#ffe6a3; }
+
+/* ---------- 7. Summary line ---------------------------------------------------- */
+#summaryCard .md-summary-line {
+  margin:0 0 12px; padding:8px 12px; border-radius:12px;
+  border:1px solid rgba(255,193,7,0.35); background:rgba(255,193,7,0.08);
+  color:#ffe6a3; font-size:0.74rem; font-weight:800; letter-spacing:0.03em; text-align:center;
+  font-variant-numeric:tabular-nums;
+}
+#summaryCard .md-summary-line b { color:#fff; }
+
+/* ---------- level card (menu, front and center) ---------- */
+#mdLevelCard {
+  margin:8px 0 12px; padding:12px 14px 10px; border-radius:16px;
+  border:1px solid rgba(255,193,7,0.42);
+  background:linear-gradient(135deg, rgba(255,193,7,0.12), rgba(140,125,255,0.10));
+  color:var(--euca-text, #e8e8f0); font-family:var(--euca-font-ui, system-ui, sans-serif);
+}
+#mdLevelCard .md-lc-top { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+#mdLevelCard .md-lc-eyebrow { font-size:0.6rem; letter-spacing:0.14em; text-transform:uppercase; color:#ffd86a; font-weight:900; }
+#mdLevelCard .md-lc-phase { font-size:0.92rem; font-weight:950; color:#fff; letter-spacing:0.02em; margin-top:2px; }
+#mdLevelCard .md-lc-level { display:flex; align-items:baseline; gap:6px; }
+#mdLevelCard .md-lc-lv { font-size:0.7rem; font-weight:900; letter-spacing:0.14em; color:#ffd86a; }
+#mdLevelCard .md-lc-num { font-size:2.2rem; font-weight:950; line-height:1; color:#fff; font-variant-numeric:tabular-nums; text-shadow:0 0 18px rgba(255,193,7,0.35); }
+#mdLevelCard .md-lc-bar { height:8px; border-radius:999px; background:rgba(255,255,255,0.08); overflow:hidden; margin:10px 0 6px; }
+#mdLevelCard .md-lc-bar > i { display:block; height:100%; width:0; border-radius:999px; background:linear-gradient(90deg, #ffc107, #8c7dff); transition:width 300ms ease; }
+#mdLevelCard .md-lc-next { font-size:0.7rem; color:#d9d6ea; font-variant-numeric:tabular-nums; }
+#mdLevelCard .md-lc-next b { color:#fff; }
+#mdLevelCard .md-lc-toggle {
+  display:block; width:100%; text-align:left; cursor:pointer; margin-top:8px; padding:6px 0 2px;
+  background:none; border:none; border-top:1px dashed rgba(255,255,255,0.12); color:#ffd86a; font:inherit;
+  font-size:0.62rem; letter-spacing:0.14em; text-transform:uppercase; font-weight:900;
+}
+#mdLevelCard .md-lc-toggle::after { content:" ▾"; }
+#mdLevelCard.collapsed .md-lc-toggle::after { content:" ▸"; }
+#mdLevelCard .md-lc-rows { list-style:none; margin:4px 0 0; padding:0; display:grid; gap:4px; }
+#mdLevelCard.collapsed .md-lc-rows { display:none; }
+#mdLevelCard .md-lc-rows li { display:grid; grid-template-columns:16px 1fr; gap:6px; font-size:0.7rem; line-height:1.4; color:#d9d6ea; }
+#mdLevelCard .md-lc-rows li .md-lc-ico { font-weight:900; text-align:center; }
+#mdLevelCard .md-lc-rows li.md-lc-ok .md-lc-ico { color:#2ee6a6; }
+#mdLevelCard .md-lc-rows li.md-lc-todo .md-lc-ico { color:#ffc107; }
+#mdLevelCard .md-lc-rows li.md-lc-info .md-lc-ico { color:#8b88a3; }
+#mdLevelCard .md-lc-rows li.md-lc-todo { color:#fff; }
+#summaryCard .md-summary-line .md-next { display:block; margin-top:4px; font-weight:700; color:#fff; }
+@media (max-width:560px) {
+  #mdLevelCard { padding:10px 12px 8px; }
+  #mdLevelCard .md-lc-num { font-size:1.9rem; }
+  #mdLevelCard .md-lc-rows li { font-size:0.66rem; }
+}
+
+/* ---------- level card: manual controls ---------- */
+#mdLevelCard .md-lc-manual { margin-top:8px; padding-top:8px; border-top:1px dashed rgba(255,255,255,0.12); display:grid; gap:6px; }
+#mdLevelCard.collapsed .md-lc-manual { display:none; }
+#mdLevelCard .md-lc-manual-row { display:grid; grid-template-columns:1fr 34px 64px 34px; align-items:center; gap:6px; font-size:0.7rem; color:#d9d6ea; }
+#mdLevelCard .md-lc-manual-label { font-weight:800; color:#fff; letter-spacing:0.03em; }
+#mdLevelCard .md-lc-manual-val { text-align:center; font-variant-numeric:tabular-nums; font-weight:900; color:#ffd86a; }
+#mdLevelCard .md-lc-btn {
+  cursor:pointer; font:inherit; font-size:0.8rem; font-weight:900; color:#fff; min-height:32px; border-radius:9px;
+  border:1px solid rgba(255,193,7,0.45); background:rgba(255,193,7,0.10);
+}
+#mdLevelCard .md-lc-btn:hover { background:rgba(255,193,7,0.22); }
+#mdLevelCard .md-lc-btn[disabled] { opacity:0.35; cursor:not-allowed; }
+#mdLevelCard .md-lc-seg-row { grid-template-columns:1fr auto; }
+#mdLevelCard .md-lc-seg { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:4px; }
+#mdLevelCard .md-lc-segbtn { min-height:28px; padding:0 9px; font-size:0.66rem; letter-spacing:0.02em; border-radius:8px; color:#e8e8f0; background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.16); }
+#mdLevelCard .md-lc-segbtn:hover { background:rgba(255,193,7,0.14); border-color:rgba(255,193,7,0.45); }
+#mdLevelCard .md-lc-segbtn.on, #mdLevelCard .md-lc-segbtn[aria-checked="true"] { color:#fff; background:rgba(255,193,7,0.2); border-color:rgba(255,193,7,0.75); box-shadow:0 0 0 1px rgba(255,193,7,0.25) inset; }
+@media (max-width:560px) {
+  #mdLevelCard .md-lc-seg-row { grid-template-columns:1fr; gap:4px; }
+  #mdLevelCard .md-lc-seg { justify-content:flex-start; }
+  #mdLevelCard .md-lc-segbtn { padding:0 8px; font-size:0.62rem; }
+}
+#mdLevelCard .md-lc-manual-hint { font-size:0.62rem; line-height:1.4; color:#a8a5bd; }
+#mdLevelCard .md-lc-note { display:none; font-size:0.68rem; line-height:1.4; font-weight:700; color:#eafff6; padding:6px 9px; border-radius:9px; border:1px solid rgba(46,230,166,0.45); background:rgba(46,230,166,0.10); }
+#mdLevelCard .md-lc-note.visible { display:block; }
+#mdLevelCard .md-lc-note.bad { color:#ffd0d6; border-color:rgba(255,107,122,0.5); background:rgba(255,107,122,0.10); }
+#mdProgressionSection .md-pairsize { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:8px; }
+#mdProgressionSection .md-pairsize-label { font-size:0.66rem; font-weight:800; color:#cfcbe0; margin-right:4px; }
+#mdProgressionSection .md-pairsize-btn[aria-checked="true"] { border-color:rgba(255,193,7,0.7); background:rgba(255,193,7,0.14); color:#fff; }
+/* ---------------------------------------------------------------------------
+   Android Chrome: a pull-to-refresh reloads the page, and a page opened from the
+   Files app (content:// link) cannot be re-read after a reload ("Your file
+   couldn't be accessed"). Alberto's own scroll areas all contain their overscroll
+   (so the gesture never reaches the browser); the fork's scroll areas must too,
+   and the root refuses overscroll actions altogether (pull-to-refresh, swipe-back).
+   --------------------------------------------------------------------------- */
+html, body { overscroll-behavior:none; }
+#mdLearnBody, #mdLearnRail, #mdAboutCard, #mdTermPanel .md-term-panel-body, #mdLearn, #mdAboutModal, #mdTermPanel { overscroll-behavior:contain; }
+#mdAboutCard, #mdTermPanel .md-term-panel-body { touch-action:pan-y; }
+#mdLearn, #mdAboutModal { touch-action:none; }
+#mdLearnBody, #mdLearnRail { touch-action:pan-y; }
+@media (max-width:760px){ #mdLearnRail { touch-action:pan-x; } }
+#mdProgressionSection .md-note { margin:8px 2px 2px; padding:7px 10px; border-radius:10px; border:1px solid rgba(255,193,7,0.35); background:rgba(255,193,7,0.08); font-size:0.66rem; line-height:1.45; color:#ffe6a3; }
